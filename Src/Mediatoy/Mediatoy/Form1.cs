@@ -9,6 +9,7 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Mediatoy
 {
@@ -25,16 +26,15 @@ namespace Mediatoy
         [DllImport("ntdll.dll", EntryPoint = "NtSetTimerResolution")]
         public static extern void NtSetTimerResolution(uint DesiredResolution, bool SetResolution, ref uint CurrentResolution);
         public static uint CurrentResolution = 0;
-        private static int width, height;
-        private static bool f11switch = false;
         public WebView2 webView21 = new WebView2();
         private static int x, y, cx, cy;
         public static int vkCode, scanCode;
         public static bool KeyboardHookButtonDown, KeyboardHookButtonUp;
-        public static bool starting = true;
         public static List<string> links = new List<string>(), pictures = new List<string>();
         public static List<PictureBox> pictureboxes = new List<PictureBox>();
         public static PictureBox pbmargin = new PictureBox(); 
+        public static string lastsource = "about:blank";
+        public static bool started = false;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -139,6 +139,9 @@ namespace Mediatoy
         }
         private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
+            if (webView21.Source.ToString() != "about:blank")
+                lastsource = webView21.Source.ToString();
+            started = true;
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
@@ -293,6 +296,10 @@ namespace Mediatoy
         private void AddStyle()
         {
             this.webView21.Hide();
+            if (started)
+            {
+                webView21.Source = new Uri("about:blank");
+            }
             foreach (PictureBox picturebox in pictureboxes)
             {
                 this.Controls.Add(picturebox);
@@ -336,7 +343,7 @@ namespace Mediatoy
             {
                 picturebox.Click += (sender, e) =>
                 {
-                    webView21.Source = new Uri(links[index]);
+                    webView21.Source = new Uri(links[index] == "back" ? lastsource : links[index]);
                     RemoveStyle();
                 };
                 picturebox.BackgroundImage = Bitmap.FromFile(pictures[index]);
