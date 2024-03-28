@@ -181,11 +181,15 @@ namespace Mediatoy
             newItem = webView21.CoreWebView2.Environment.CreateContextMenuItem("Go to Uri", null, CoreWebView2ContextMenuItemKind.Command);
             newItem.CustomItemSelected += delegate (object send, Object ex)
             {
+                this.TopMost = false;
                 string newpageUri = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Enter a new page Uri", "https://google.com", 0, 0);
                 System.Threading.SynchronizationContext.Current.Post((_) =>
                 {
                     if (newpageUri != "")
+                    {
                         Navigate(newpageUri);
+                    }
+                    this.TopMost = true;
                 }, null);
             };
             menuList.Insert(menuList.Count, newItem);
