@@ -66,7 +66,7 @@ namespace Mediatoy
             cy = Screen.PrimaryScreen.Bounds.Height;
             this.Size = new Size(cx, cy);
             this.Location = new Point(x, y);
-            this.BackgroundImage = Bitmap.FromFile("background.gif");
+            this.BackgroundImage = Bitmap.FromFile("background.jpg");
             using (StreamReader file = new StreamReader("mediatoy.txt"))
             {
                 while (true)
@@ -150,18 +150,19 @@ namespace Mediatoy
             else
             {
                 this.webView21.Hide();
+                this.Controls.Add(pbmargin);
+                pbmargin.BringToFront();
                 foreach (PictureBox picturebox in pictureboxes)
                 {
                     this.Controls.Add(picturebox);
                     picturebox.BringToFront();
                 }
-                this.Controls.Add(pbmargin);
-                pbmargin.BringToFront();
             }
         }
         private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            started = true;
+            if (webView21.Source.ToString() != "about:blank")
+                started = true;
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
@@ -307,11 +308,11 @@ namespace Mediatoy
         private void RemoveStyle()
         {
             this.webView21.Show();
+            this.Controls.Remove(pbmargin);
             foreach (PictureBox picturebox in pictureboxes)
             {
                 this.Controls.Remove(picturebox);
             }
-            this.Controls.Remove(pbmargin);
         }
         private void AddStyle()
         {
@@ -320,13 +321,13 @@ namespace Mediatoy
             {
                 webView21.Source = new Uri("about:blank");
             }
+            this.Controls.Add(pbmargin);
+            pbmargin.BringToFront();
             foreach (PictureBox picturebox in pictureboxes)
             {
                 this.Controls.Add(picturebox);
                 picturebox.BringToFront();
             }
-            this.Controls.Add(pbmargin);
-            pbmargin.BringToFront();
         }
         private void SetStyle()
         {
@@ -363,8 +364,11 @@ namespace Mediatoy
             {
                 picturebox.Click += (sender, e) =>
                 {
-                    webView21.Source = new Uri(links[index] == "back" ? lastsource : links[index]);
-                    RemoveStyle();
+                    if (links[index] != "back" | started)
+                    {
+                        webView21.Source = new Uri(links[index] == "back" ? lastsource : links[index]);
+                        RemoveStyle();
+                    }
                 };
                 picturebox.BackgroundImage = Bitmap.FromFile(pictures[index]);
             }
