@@ -107,6 +107,11 @@ namespace Mediatoy
             webView21.KeyDown += WebView21_KeyDown;
             webView21.DefaultBackgroundColor = Color.Black;
             this.Controls.Add(webView21);
+            webView21.Source = new Uri("about:blank");
+            string stringinject = @"
+                        window.location.href = 'about:blank';
+                    ".Replace("\r\n", " ");
+            execScriptHelper(stringinject);
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
