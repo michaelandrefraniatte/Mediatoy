@@ -82,6 +82,7 @@ namespace Mediatoy
             webView21.KeyDown += WebView21_KeyDown;
             webView21.DefaultBackgroundColor = Color.Black;
             this.Controls.Add(webView21);
+            this.webView21.Hide();
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -106,7 +107,7 @@ namespace Mediatoy
             }
             if (keyData == Keys.Escape)
             {
-                this.Close();
+                AddStyle();
             }
         }
         private void Form1_SizeChanged(object sender, EventArgs e)
@@ -263,31 +264,171 @@ namespace Mediatoy
             webView21.Source = new Uri("https://www.crunchyroll.com/fr/");
             RemoveStyle();
         }
+        private void pbnetflix_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.netflix.com/");
+            RemoveStyle();
+        }
+        private void pbhbo_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.hbo.com/");
+            RemoveStyle();
+        }
+        private void pbparamount_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.paramountplus.com/");
+            RemoveStyle();
+        }
+        private void pbcanal_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.canalplus.com/");
+            RemoveStyle();
+        }
+        private void pbdisney_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.disneyplus.com/");
+            RemoveStyle();
+        }
+        private void pbocs_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.ocs.fr/");
+            RemoveStyle();
+        }
+        private void pbprimevideo_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.primevideo.com/");
+            RemoveStyle();
+        }
+        private void pbtf1_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.tf1.fr/");
+            RemoveStyle();
+        }
+        private void pbpluto_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://pluto.tv/");
+            RemoveStyle();
+        }
+        private void pbweather_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://meteofrance.com/");
+            RemoveStyle();
+        }
+        private void pbyoutube_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.youtube.com/");
+            RemoveStyle();
+        }
+        private void pbspotify_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://open.spotify.com/");
+            RemoveStyle();
+        }
+        private void pbdeezer_Click(object sender, EventArgs e)
+        {
+            webView21.Source = new Uri("https://www.deezer.com/us/");
+            RemoveStyle();
+        }
         private void RemoveStyle()
         {
             this.webView21.Show();
-            this.Controls.Remove(label1);
             this.Controls.Remove(pbmolotov);
             this.Controls.Remove(pbcrunchyroll);
+            this.Controls.Remove(pbnetflix);
+            this.Controls.Remove(pbhbo);
+            this.Controls.Remove(pbparamount);
+            this.Controls.Remove(pbcanal);
+            this.Controls.Remove(pbdisney);
+            this.Controls.Remove(pbocs);
+            this.Controls.Remove(pbprimevideo);
+            this.Controls.Remove(pbtf1);
+            this.Controls.Remove(pbpluto);
+            this.Controls.Remove(pbweather);
+            this.Controls.Remove(pbyoutube);
+            this.Controls.Remove(pbspotify);
+            this.Controls.Remove(pbdeezer);
         }
         private void AddStyle()
         {
             this.webView21.Hide();
-            this.Controls.Add(label1);
-            label1.BringToFront();
             this.Controls.Add(pbmolotov);
             pbmolotov.BringToFront();
             this.Controls.Add(pbcrunchyroll);
             pbcrunchyroll.BringToFront();
+            this.Controls.Add(pbnetflix);
+            pbnetflix.BringToFront();
+            this.Controls.Add(pbhbo);
+            pbhbo.BringToFront();
+            this.Controls.Add(pbparamount);
+            pbparamount.BringToFront();
+            this.Controls.Add(pbcanal);
+            pbcanal.BringToFront();
+            this.Controls.Add(pbdisney);
+            pbdisney.BringToFront();
+            this.Controls.Add(pbocs);
+            pbocs.BringToFront();
+            this.Controls.Add(pbprimevideo);
+            pbprimevideo.BringToFront();
+            this.Controls.Add(pbtf1);
+            pbtf1.BringToFront();
+            this.Controls.Add(pbpluto);
+            pbpluto.BringToFront();
+            this.Controls.Add(pbweather);
+            pbweather.BringToFront();
+            this.Controls.Add(pbyoutube);
+            pbyoutube.BringToFront();
+            this.Controls.Add(pbspotify);
+            pbspotify.BringToFront();
+            this.Controls.Add(pbdeezer);
+            pbdeezer.BringToFront();
         }
         private void SetStyle()
         {
             pbmolotov.Cursor = Cursors.Hand;
             pbcrunchyroll.Cursor = Cursors.Hand;
+            pbnetflix.Cursor = Cursors.Hand;
+            pbhbo.Cursor = Cursors.Hand;
+            pbparamount.Cursor = Cursors.Hand;
+            pbcanal.Cursor = Cursors.Hand;
+            pbdisney.Cursor = Cursors.Hand;
+            pbocs.Cursor = Cursors.Hand;
+            pbprimevideo.Cursor = Cursors.Hand;
+            pbtf1.Cursor = Cursors.Hand;
+            pbpluto.Cursor = Cursors.Hand;
+            pbweather.Cursor = Cursors.Hand;
+            pbyoutube.Cursor = Cursors.Hand;
+            pbspotify.Cursor = Cursors.Hand;
+            pbdeezer.Cursor = Cursors.Hand;
             this.pbmolotov.Size = new System.Drawing.Size(cx / 16, cy / 9);
             this.pbcrunchyroll.Size = new System.Drawing.Size(cx / 16, cy / 9);
-            this.pbmolotov.Location = new Point(cx / 50 + this.pbmolotov.Size.Width / 2, cy / 50 + this.pbmolotov.Size.Height / 2);
-            this.pbcrunchyroll.Location = new Point(cx / 10 + this.pbcrunchyroll.Size.Width / 2, cy / 50 + this.pbcrunchyroll.Size.Height / 2);
+            this.pbnetflix.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbhbo.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbparamount.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbcanal.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbdisney.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbocs.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbprimevideo.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbtf1.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbpluto.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbweather.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbyoutube.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbspotify.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbdeezer.Size = new System.Drawing.Size(cx / 16, cy / 9);
+            this.pbmolotov.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 1 / 9 + this.pbmolotov.Size.Width * 0, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbcrunchyroll.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 2 / 9 + this.pbmolotov.Size.Width * 1, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbnetflix.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 3 / 9 + this.pbmolotov.Size.Width * 2, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbhbo.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 4 / 9 + this.pbmolotov.Size.Width * 3,   (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbparamount.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 5 / 9 + this.pbmolotov.Size.Width * 4, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbcanal.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 6 / 9 + this.pbmolotov.Size.Width * 5, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbdisney.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 7 / 9 + this.pbmolotov.Size.Width * 6, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbocs.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 8 / 9 + this.pbmolotov.Size.Width * 7, (cy - this.pbmolotov.Size.Height * 5) * 1 / 6 + this.pbmolotov.Size.Height * 0);
+            this.pbprimevideo.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 1 / 9 + this.pbmolotov.Size.Width * 0, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
+            this.pbtf1.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 2 / 9 + this.pbmolotov.Size.Width * 1, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
+            this.pbpluto.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 3 / 9 + this.pbmolotov.Size.Width * 2, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
+            this.pbweather.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 4 / 9 + this.pbmolotov.Size.Width * 3, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
+            this.pbyoutube.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 5 / 9 + this.pbmolotov.Size.Width * 4, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
+            this.pbspotify.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 6 / 9 + this.pbmolotov.Size.Width * 5, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
+            this.pbdeezer.Location = new Point((cx - this.pbmolotov.Size.Width * 8) * 7 / 9 + this.pbmolotov.Size.Width * 6, (cy - this.pbmolotov.Size.Height * 5) * 2 / 6 + this.pbmolotov.Size.Height * 1);
         }
     }
 }
