@@ -141,6 +141,17 @@ namespace Mediatoy
         {
             if (webView21.Source.ToString() != "about:blank")
                 lastsource = webView21.Source.ToString();
+            else
+            {
+                this.webView21.Hide();
+                foreach (PictureBox picturebox in pictureboxes)
+                {
+                    this.Controls.Add(picturebox);
+                    picturebox.BringToFront();
+                }
+                this.Controls.Add(pbmargin);
+                pbmargin.BringToFront();
+            }
             started = true;
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
