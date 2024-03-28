@@ -89,22 +89,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="spotify.png" />
-    <None Include="youtube.png" />
-    <None Include="weather.png" />
-    <None Include="pluto.png" />
-    <None Include="tf1.png" />
-    <None Include="primevideo.jpg" />
-    <None Include="ocs.png" />
-    <None Include="paramount.jpg" />
-    <None Include="netflix.png" />
-    <None Include="molotov.png" />
-    <None Include="crunchyroll.png" />
-    <None Include="hbo.png" />
-    <None Include="canal.png" />
-    <None Include="disney.jpg" />
-    <None Include="deezer.png" />
-    <None Include="background.jpg" />
     <Content Include="mt.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
