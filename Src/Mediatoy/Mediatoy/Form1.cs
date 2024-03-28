@@ -103,6 +103,7 @@ namespace Mediatoy
             webView21.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
             webView21.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
             webView21.NavigationCompleted += WebView21_NavigationCompleted;
+            webView21.SourceChanged += WebView21_SourceChanged;
             webView21.KeyDown += WebView21_KeyDown;
             webView21.DefaultBackgroundColor = Color.Black;
             this.Controls.Add(webView21);
@@ -137,7 +138,7 @@ namespace Mediatoy
         {
             SetStyle();
         }
-        private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        private void WebView21_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
         {
             if (webView21.Source.ToString() != "about:blank")
                 lastsource = webView21.Source.ToString();
@@ -152,6 +153,9 @@ namespace Mediatoy
                 this.Controls.Add(pbmargin);
                 pbmargin.BringToFront();
             }
+        }
+        private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+        {
             started = true;
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
