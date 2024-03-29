@@ -30,11 +30,16 @@ https://open.spotify.com/
 spotify.png
 https://www.deezer.com/us/
 deezer.png
-
-
-
-
-
+https://www.twitch.tv/
+twitch.png
+https://www.tiktok.com/
+tiktok.png
+https://google.com/
+google.png
+https://www.engadget.com/
+engadget.png
+https://store.steampowered.com/
+steam.png
 
 
 
