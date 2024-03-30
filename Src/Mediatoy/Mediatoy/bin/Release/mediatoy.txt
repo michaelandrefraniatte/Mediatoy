@@ -1,5 +1,7 @@
 back
 back.png
+historic
+historic.png
 https://app.molotov.tv/channels/
 molotov.png
 https://www.crunchyroll.com/fr/
@@ -40,6 +42,8 @@ https://www.engadget.com/
 engadget.png
 https://store.steampowered.com/
 steam.png
+https://www.google.com/maps
+googlemap.png
 
 
 

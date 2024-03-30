@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace Mediatoy
 {
@@ -35,6 +36,7 @@ namespace Mediatoy
         public static PictureBox pbmargin = new PictureBox(); 
         public static string lastsource = "about:blank";
         public static bool started = false;
+        private static string historicpath;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -92,6 +94,8 @@ namespace Mediatoy
             CoreWebView2EnvironmentOptions options = new CoreWebView2EnvironmentOptions("--disable-gpu --disable-gpu-compositing", "en");
             CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
             await webView21.EnsureCoreWebView2Async(environment);
+            webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("appassets", "assets", CoreWebView2HostResourceAccessKind.DenyCors);
+            historicpath = @"file:///" + System.Reflection.Assembly.GetEntryAssembly().Location.Replace("\\", "/").Replace("Mediatoy.exe", "") + "assets/historic.html";
             webView21.CoreWebView2.AddWebResourceRequestedFilter("*", CoreWebView2WebResourceContext.All);
             webView21.CoreWebView2.WebResourceRequested += CoreWebView2_WebResourceRequested;
             webView21.CoreWebView2.Settings.AreDevToolsEnabled = true;
@@ -145,9 +149,12 @@ namespace Mediatoy
         }
         private void WebView21_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
         {
-            if (webView21.Source.ToString() != "about:blank")
+            if (webView21.Source.ToString() != "about:blank" & webView21.Source.ToString() != historicpath)
+            {
                 lastsource = webView21.Source.ToString();
-            else
+                WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "'>" + lastsource + "</a></br>");
+            }
+            else if (webView21.Source.ToString() == "about:blank")
             {
                 this.webView21.Hide();
                 this.Controls.Add(pbmargin);
@@ -366,12 +373,25 @@ namespace Mediatoy
                 {
                     if (links[index] != "back" | started)
                     {
-                        webView21.Source = new Uri(links[index] == "back" ? lastsource : links[index]);
+                        webView21.Source = new Uri(links[index] == "back" ? lastsource : (links[index] == "historic" ? historicpath : links[index]));
                         RemoveStyle();
                     }
                 };
                 picturebox.BackgroundImage = Bitmap.FromFile(pictures[index]);
             }
+        }
+        private static void WriteIntoFile(string filename, string text)
+        {
+            string tempfile = Path.GetTempFileName();
+            using (var writer = new FileStream(tempfile, FileMode.Create))
+            using (var reader = new FileStream(filename, FileMode.Open))
+            {
+                var stringBytes = Encoding.UTF8.GetBytes(text + Environment.NewLine);
+                writer.Write(stringBytes, 0, stringBytes.Length);
+                reader.CopyTo(writer);
+            }
+            File.Copy(tempfile, filename, true);
+            File.Delete(tempfile);
         }
     }
     public static class IEnumerableExtensions
