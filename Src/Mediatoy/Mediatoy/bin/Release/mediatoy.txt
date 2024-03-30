@@ -2,6 +2,8 @@ back
 back.png
 historic
 historic.png
+search
+search.png
 https://app.molotov.tv/channels/
 molotov.png
 https://www.crunchyroll.com/fr/

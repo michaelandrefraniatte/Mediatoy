@@ -371,7 +371,21 @@ namespace Mediatoy
             {
                 picturebox.Click += (sender, e) =>
                 {
-                    if (links[index] != "back" | started)
+                    if (links[index] == "search")
+                    {
+                        this.TopMost = false;
+                        string newpageUri = Microsoft.VisualBasic.Interaction.InputBox("Prompt", "Enter a new page Uri", "https://google.com", 0, 0);
+                        System.Threading.SynchronizationContext.Current.Post((_) =>
+                        {
+                            if (newpageUri != "")
+                            {
+                                Navigate(newpageUri);
+                                RemoveStyle();
+                            }
+                            this.TopMost = true;
+                        }, null);
+                    }
+                    else if (links[index] != "back" | started)
                     {
                         webView21.Source = new Uri(links[index] == "back" ? lastsource : (links[index] == "historic" ? historicpath : links[index]));
                         RemoveStyle();
