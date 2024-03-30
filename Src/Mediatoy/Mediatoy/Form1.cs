@@ -391,6 +391,11 @@ namespace Mediatoy
                         RemoveStyle();
                     }
                 };
+                picturebox.MouseHover += (sender, e) =>
+                {
+                    ToolTip tooltip = new ToolTip();
+                    tooltip.SetToolTip(picturebox, links[index]);
+                };
                 picturebox.BackgroundImage = Bitmap.FromFile(pictures[index]);
             }
         }
