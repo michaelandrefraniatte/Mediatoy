@@ -153,6 +153,7 @@ namespace Mediatoy
             {
                 lastsource = webView21.Source.ToString();
                 WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "'>" + lastsource + "</a></br>");
+                started = true;
             }
             else if (webView21.Source.ToString() == "about:blank")
             {
@@ -168,8 +169,6 @@ namespace Mediatoy
         }
         private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            if (webView21.Source.ToString() != "about:blank")
-                started = true;
         }
         private void CoreWebView2_WebResourceRequested(object sender, CoreWebView2WebResourceRequestedEventArgs e)
         {
