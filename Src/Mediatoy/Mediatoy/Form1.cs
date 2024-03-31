@@ -301,6 +301,112 @@ namespace Mediatoy
         }
         private async void timer1_Tick(object sender, EventArgs e)
         {
+            if (webView21.Source.ToString().Contains("youtube.com") | webView21.Source.ToString().Contains("youtu.be"))
+            {
+                try
+                {
+                    string stringinject = @"
+                        try {
+                            document.cookie = 'VISITOR_INFO1_LIVE = oKckVSqvaGw; path =/; domain =.youtube.com';
+                            var cookies = document.cookie.split('; ');
+                            for (var i = 0; i < cookies.length; i++)
+                            {
+                                var cookie = cookies[i];
+                                var eqPos = cookie.indexOf('=');
+                                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                                document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                            }
+                        }
+                        catch { }
+                        try {
+                            var els = document.getElementsByClassName('video-ads ytp-ad-module');
+                            for (var i=0;i<els.length; i++) {
+                                els[i].click();
+                            }
+                        }
+                        catch { }
+                        try {
+                            var el = document.getElementsByClassName('ytp-ad-skip-button');
+                            for (var i=0;i<el.length; i++) {
+                                el[i].click();
+                            }
+                        }
+                        catch { }
+                        try {
+                            var elements = document.getElementsByClassName('ytp-ad-overlay-close-button');
+                            for (var i=0;i<elements.length; i++) {
+                                elements[i].click();
+                            }
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-player-legacy-desktop-watch-ads-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var closeButton = document.querySelector('.ytp-ad-overlay-close-button');
+                            if (closeButton) {
+                                closeButton.click();
+                            }
+                        }
+                        catch { }
+                        try {
+                            var playButton = document.querySelector('.ytp-large-play-button:visible');
+                            if (playButton) {
+                                playButton.click();
+                            }
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.querySelectorAll('.ytp-ad-skip-button');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.querySelectorAll('.ytp-ad-skip-button-modern');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.getElementsByClassName('ytp-ad-skip-button');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                        try {
+                            var skipButton = document.getElementsByClassName('ytp-ad-skip-button-modern');
+                            skipButton.forEach(elem => elem.click());
+                            skipButton.forEach(elem => elem.style.zIndex = '10');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ad-container');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-open');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-image');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytp-ad-overlay-container');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                    ";
+                    await execScriptHelper(stringinject);
+                }
+                catch { }
+            }
         }
         private async Task<String> execScriptHelper(String script)
         {
