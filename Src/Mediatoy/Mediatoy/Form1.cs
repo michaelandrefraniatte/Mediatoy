@@ -152,7 +152,7 @@ namespace Mediatoy
             if (webView21.Source.ToString() != "about:blank" & webView21.Source.ToString() != historicpath)
             {
                 lastsource = webView21.Source.ToString();
-                WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "'>" + lastsource + "</a></br>");
+                WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "'>" + lastsource + "</a><br />");
                 started = true;
             }
             else if (webView21.Source.ToString() == "about:blank")
