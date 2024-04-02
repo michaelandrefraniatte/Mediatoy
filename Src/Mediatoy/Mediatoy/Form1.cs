@@ -451,8 +451,16 @@ namespace Mediatoy
                 picturebox.Cursor = Cursors.Hand;
                 picturebox.Size = new System.Drawing.Size(cx / 16, cy / 9);
                 picturebox.BackColor = System.Drawing.Color.Transparent;
-                picturebox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+                picturebox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
                 picturebox.Location = new Point((cx - picturebox.Size.Width * 8) * (lx + 1) / 9 + picturebox.Size.Width * lx, (cy - picturebox.Size.Height * 5) * (ly + 1) / 6 + picturebox.Size.Height * ly);
+                Rectangle r = new Rectangle(0, 0, picturebox.Width, picturebox.Height);
+                System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
+                int d = 22;
+                gp.AddArc(r.X, r.Y, d, d, 180, 90);
+                gp.AddArc(r.X + r.Width - d, r.Y, d, d, 270, 90);
+                gp.AddArc(r.X + r.Width - d, r.Y + r.Height - d, d, d, 0, 90);
+                gp.AddArc(r.X, r.Y + r.Height - d, d, d, 90, 90);
+                picturebox.Region = new Region(gp);
                 lx++;
                 if (lx > 7) 
                 {
