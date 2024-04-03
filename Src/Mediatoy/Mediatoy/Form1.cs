@@ -34,8 +34,7 @@ namespace Mediatoy
         public static List<string> links = new List<string>(), pictures = new List<string>();
         public static List<PictureBox> pictureboxes = new List<PictureBox>();
         public static PictureBox pbmargin = new PictureBox(); 
-        public static string lastsource = "about:blank";
-        public static bool started = false;
+        public static string lastsource = "";
         private static string historicpath;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
@@ -168,7 +167,6 @@ namespace Mediatoy
             {
                 lastsource = webView21.Source.ToString();
                 WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "' title='" + lastsource + "'>" + webView21.CoreWebView2.DocumentTitle + "</a><br />");
-                started = true;
             }
         }
         private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
@@ -433,7 +431,7 @@ namespace Mediatoy
         private void AddStyle()
         {
             this.webView21.Hide();
-            if (started)
+            if (lastsource != "")
             {
                 webView21.Source = new Uri("about:blank");
             }
@@ -502,7 +500,7 @@ namespace Mediatoy
                             this.TopMost = true;
                         }, null);
                     }
-                    else if (links[index] != "back" | started)
+                    else if (links[index] != "back" | lastsource != "")
                     {
                         webView21.Source = new Uri(links[index] == "back" ? lastsource : (links[index] == "historic" ? historicpath : links[index]));
                         RemoveStyle();
