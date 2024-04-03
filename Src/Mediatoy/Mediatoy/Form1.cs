@@ -108,6 +108,7 @@ namespace Mediatoy
             webView21.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
             webView21.NavigationCompleted += WebView21_NavigationCompleted;
             webView21.SourceChanged += WebView21_SourceChanged;
+            webView21.CoreWebView2.DocumentTitleChanged += CoreWebView2_DocumentTitleChanged;
             webView21.KeyDown += WebView21_KeyDown;
             webView21.DefaultBackgroundColor = Color.Black;
             this.Controls.Add(webView21);
@@ -149,13 +150,7 @@ namespace Mediatoy
         }
         private void WebView21_SourceChanged(object sender, CoreWebView2SourceChangedEventArgs e)
         {
-            if (webView21.Source.ToString() != "about:blank" & webView21.Source.ToString() != historicpath)
-            {
-                lastsource = webView21.Source.ToString();
-                WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "'>" + lastsource + "</a><br />");
-                started = true;
-            }
-            else if (webView21.Source.ToString() == "about:blank")
+            if (webView21.Source.ToString() == "about:blank")
             {
                 this.webView21.Hide();
                 this.Controls.Add(pbmargin);
@@ -165,6 +160,15 @@ namespace Mediatoy
                     this.Controls.Add(picturebox);
                     picturebox.BringToFront();
                 }
+            }
+        }
+        private void CoreWebView2_DocumentTitleChanged(object sender, object e)
+        {
+            if (webView21.Source.ToString() != "about:blank" & webView21.Source.ToString() != historicpath)
+            {
+                lastsource = webView21.Source.ToString();
+                WriteIntoFile("assets/historic.html", "<a style='color:white;' href='" + lastsource + "'>" + webView21.CoreWebView2.DocumentTitle + "</a><br />");
+                started = true;
             }
         }
         private void WebView21_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
