@@ -9,8 +9,8 @@ using System.Drawing;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
+using Valuechanges;
 
 namespace Mediatoy
 {
@@ -20,6 +20,24 @@ namespace Mediatoy
         {
             InitializeComponent();
         }
+        private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
+        private const int APPCOMMAND_VOLUME_UP = 0xA0000;
+        private const int APPCOMMAND_VOLUME_DOWN = 0x90000;
+        private const int WM_APPCOMMAND = 0x319;
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("USER32.DLL")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, uint dwNewLong);
+        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
+        static extern IntPtr FindWindowByCaption(IntPtr ZeroOnly, string lpWindowName);
+        [DllImport("user32.dll")]
+        static extern bool DrawMenuBar(IntPtr hWnd);
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
+        [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
         [DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
         public static extern uint TimeBeginPeriod(uint ms);
         [DllImport("winmm.dll", EntryPoint = "timeEndPeriod")]
@@ -27,7 +45,18 @@ namespace Mediatoy
         [DllImport("ntdll.dll", EntryPoint = "NtSetTimerResolution")]
         public static extern void NtSetTimerResolution(uint DesiredResolution, bool SetResolution, ref uint CurrentResolution);
         public static uint CurrentResolution = 0;
-        public WebView2 webView21 = new WebView2();
+        private static string WINDOW_NAME = "";
+        private const int GWL_STYLE = -16;
+        private const uint WS_BORDER = 0x00800000;
+        private const uint WS_CAPTION = 0x00C00000;
+        private const uint WS_SYSMENU = 0x00080000;
+        private const uint WS_MINIMIZEBOX = 0x00020000;
+        private const uint WS_MAXIMIZEBOX = 0x00010000;
+        private const uint WS_OVERLAPPED = 0x00000000;
+        private const uint WS_POPUP = 0x80000000;
+        private const uint WS_TABSTOP = 0x00010000;
+        private const uint WS_VISIBLE = 0x10000000;
+        public static WebView2 webView21 = new WebView2();
         private static int x, y, cx, cy;
         public static int vkCode, scanCode;
         public static bool KeyboardHookButtonDown, KeyboardHookButtonUp;
@@ -36,6 +65,9 @@ namespace Mediatoy
         public static PictureBox pbmargin = new PictureBox(); 
         public static string lastsource = "";
         private static string historicpath;
+        public static bool cutsound = false;
+        private static IntPtr hwnd;
+        public static Valuechange ValueChange = new Valuechange();
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -102,6 +134,7 @@ namespace Mediatoy
             {
                 this.FullScreen = webView21.CoreWebView2.ContainsFullScreenElement;
             };
+            webView21.CoreWebView2.AddHostObjectToScript("bridge", new Bridge());
             webView21.Dock = DockStyle.Fill;
             webView21.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
             webView21.CoreWebView2.ContextMenuRequested += CoreWebView2_ContextMenuRequested;
@@ -116,6 +149,7 @@ namespace Mediatoy
                         window.location.href = 'about:blank';
                     ".Replace("\r\n", " ");
             execScriptHelper(stringinject);
+            hwnd = this.Handle;
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -151,7 +185,7 @@ namespace Mediatoy
         {
             if (webView21.Source.ToString() == "about:blank")
             {
-                this.webView21.Hide();
+                webView21.Hide();
                 this.Controls.Add(pbmargin);
                 pbmargin.BringToFront();
                 foreach (PictureBox picturebox in pictureboxes)
@@ -342,8 +376,109 @@ namespace Mediatoy
                         }
                         catch { }
                         try {
+                            var scripts = document.getElementsByTagName('script');
+                            for (let i = 0; i < scripts.length; i++)
+                            {
+                                var content = scripts[i].innerHTML;
+                                if (content.indexOf('ytp-ad') > -1) {
+                                    scripts[i].innerHTML = '';
+                                }
+                                var src = scripts[i].getAttribute('src');
+                                if (src.indexOf('ytp-ad') > -1) {
+                                    scripts[i].setAttribute('src', '');
+                                }
+                            }
+                        }
+                        catch { }
+                        try {
+                            var iframes = document.getElementsByTagName('iframe');
+                            for (let i = 0; i < iframes.length; i++)
+                            {
+                                var content = iframes[i].innerHTML;
+                                if (content.indexOf('ytp-ad') > -1) {
+                                    iframes[i].innerHTML = '';
+                                }
+                                var src = iframes[i].getAttribute('src');
+                                if (src.indexOf('ytp-ad') > -1) {
+                                    iframes[i].setAttribute('src', '');
+                                }
+                            }
+                        }
+                        catch { }
+                        try {
+                            var allelements = document.querySelectorAll('*');
+                            for (var i = 0; i < allelements.length; i++) {
+                                var classname = allelements[i].className;
+                                if (classname.indexOf('ytp-ad') > -1 | classname.indexOf('-ad-') > -1 | classname.indexOf('ad-') > -1 | classname.indexOf('ads-') > -1 | classname.indexOf('ad-showing') > -1 | classname.indexOf('ad-container') > -1 | classname.indexOf('ytp-ad-overlay-open') > -1 | classname.indexOf('video-ads') > -1)  {
+                                    allelements[i].innerHTML = '';
+                                }
+                            }
+                        }
+                        catch { }
+                        try {
+                            var players = document.getElementById('movie_player');
+                            for (let i = 0; i < players.length; i++) {
+                                players.classList.remove('ad-interrupting');
+                                players.classList.remove('playing-mode');
+                                players.classList.remove('ytp-autohide');
+                                players.classList.add('ytp-hide-info-bar');
+                                players.classList.add('playing-mode');
+                                players.classList.add('ytp-autohide');
+                            }
+                        }
+                        catch { }
+                        try {
+                            var fabelements = document.querySelectorAll('yt-reaction-control-panel-button-view-model');
+                            for (var i = 0; i < fabelements.length; i++) {
+                                    fabelements[i].innerHTML = '';
+                            }
+                        }
+                        catch { }
+                        try {
+                            var fabelement = document.querySelector('#fab-container');
+                            fabelement.innerHTML = '';
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-engagement-panel-section-list-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
                             var contents = document.querySelectorAll('ytd-player-legacy-desktop-watch-ads-renderer');
                             contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('yt-reaction-control-panel-button-view-model');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('tp-yt-paper-dialog');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-statement-banner-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-brand-video-singleton-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelector('#reaction-control-panel').style.display = 'none';
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelector('#emoji-fountain').style.display = 'none';
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelector('#fab-container').style.display = 'none';
                         }
                         catch { }
                         try {
@@ -385,12 +520,22 @@ namespace Mediatoy
                         }
                         catch { }
                         try {
+                            var contents = document.querySelectorAll('.ad-showing');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
                             var contents = document.querySelectorAll('.ad-container');
                             contents.forEach(elem => elem.style.display = 'none');
                         }
                         catch { }
                         try {
                             var contents = document.querySelectorAll('.ytp-ad-overlay-open');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('.video-ads');
                             contents.forEach(elem => elem.style.display = 'none');
                         }
                         catch { }
@@ -404,13 +549,39 @@ namespace Mediatoy
                             contents.forEach(elem => elem.style.display = 'none');
                         }
                         catch { }
+                        try {
+                            var contents = document.querySelectorAll('.ytd-carousel-ad-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-ad-slot-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            var contents = document.querySelectorAll('ytd-action-companion-ad-renderer');
+                            contents.forEach(elem => elem.style.display = 'none');
+                        }
+                        catch { }
+                        try {
+                            const bridge = chrome.webview.hostObjects.bridge;
+                            var mute = document.querySelectorAll('.ad-showing');
+                            if (mute.length > 0) {
+                                bridge.CutSound('1');
+                            }
+                            else {
+                                bridge.CutSound('0');
+                            }
+                        }
+                        catch { }
                     ";
                     await execScriptHelper(stringinject);
                 }
                 catch { }
             }
         }
-        private async Task<String> execScriptHelper(String script)
+        private async static Task<String> execScriptHelper(String script)
         {
             var x = await webView21.ExecuteScriptAsync(script).ConfigureAwait(false);
             return x;
@@ -419,9 +590,120 @@ namespace Mediatoy
         {
             webView21.Dispose();
         }
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (cutsound)
+            {
+                VolDown();
+                VolUp();
+            }
+        }
+        public static void Mute()
+        {
+            SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_MUTE);
+        }
+        public static void VolDown()
+        {
+            SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_DOWN);
+        }
+        public static void VolUp()
+        {
+            SendMessageW(hwnd, WM_APPCOMMAND, hwnd, (IntPtr)APPCOMMAND_VOLUME_UP);
+        }
+        public async static void CutSound(double param)
+        {
+            string stringinject = "";
+            ValueChange[0] = param;
+            if (Valuechange._ValueChange[0] > 0f)
+            {
+                cutsound = true;
+                Mute();
+                stringinject = @"
+                        try {
+                            var link = window.location.href;
+                            link = link.split('&')[0];
+                            var id = link.split('?v=')[1];
+                            var player = document.getElementById('player');
+                            if (player) {
+                                player.style.backgroundImage = `url(\'` + 'https://i.ytimg.com/vi/' + id + '/hq720.jpg' + `\')`;
+                                player.style.backgroundSize = 'cover';
+                                player.style.backgroundRepeat = 'no-repeat';
+                                player.style.backgroundPosition = 'center';
+                            }
+                        }
+                        catch { }
+                        try {
+                            var button = document.querySelector('.ytp-ad-skip-button-modern');
+                            var video = document.querySelector('#player');
+                            video.after(button);
+                        }
+                        catch { }
+                        try {
+                            var button = document.querySelector('.ytp-ad-skip-button');
+                            var video = document.querySelector('#player');
+                            video.after(button);
+                        }
+                        catch { }
+                        try {
+                            var script = document.createElement('script');
+                            script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js';
+                            script.async = false;
+                            var head = document.getElementsByTagName('head')[0];
+                            head.appendChild(script);
+                        }
+                        catch { }
+                        try {
+                            (function() {
+                                var adSkipButtonModern = setInterval(() => {
+                                    try {
+                                        $('.ytp-ad-skip-button-modern').trigger('click');
+                                    }
+                                    catch { }
+                                }, 10000);
+                                setTimeout(() => {
+                                    clearInterval(adSkipButtonModern);
+                                }, '120000');
+                            })();
+                        }
+                        catch { }
+                        try {
+                            (function() {
+                                var adSkipButton = setInterval(() => {
+                                    try {
+                                        $('.ytp-ad-skip-button').trigger('click');
+                                    }
+                                    catch { }
+                                }, 10000);
+                                setTimeout(() => {
+                                    clearInterval(adSkipButton);
+                                }, '120000');
+                            })();
+                        }
+                        catch { }
+                    ".Replace("\r\n", " ");
+                execScriptHelper(stringinject);
+            }
+            if (Valuechange._ValueChange[0] < 0f)
+            {
+                cutsound = false;
+                VolDown();
+                VolUp();
+                stringinject = @"
+                        var player = document.getElementById('player');
+                        if (player) {
+                            player.style.backgroundImage = 'none';
+                        }
+                        var video = document.querySelector('.html5-video-player');
+                        if (video) {
+                            video.style.display = 'block';
+                        }
+                    ".Replace("\r\n", " ");
+                execScriptHelper(stringinject);
+            }
+        }
         private void RemoveStyle()
         {
-            this.webView21.Show();
+            webView21.Show();
             this.Controls.Remove(pbmargin);
             foreach (PictureBox picturebox in pictureboxes)
             {
@@ -430,7 +712,7 @@ namespace Mediatoy
         }
         private void AddStyle()
         {
-            this.webView21.Hide();
+            webView21.Hide();
             if (lastsource != "")
             {
                 webView21.Source = new Uri("about:blank");
@@ -531,5 +813,15 @@ namespace Mediatoy
     public static class IEnumerableExtensions
     {
         public static IEnumerable<(T item, int index)> WithIndex<T>(this IEnumerable<T> self) => self.Select((item, index) => (item, index));
+    }
+    [ClassInterface(ClassInterfaceType.AutoDual)]
+    [ComVisible(true)]
+    public class Bridge
+    {
+        public string CutSound(string param)
+        {
+            Form1.CutSound(Convert.ToSingle(param));
+            return param;
+        }
     }
 }

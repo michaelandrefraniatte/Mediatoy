@@ -18,3 +18,5 @@ C:\Users\micha\Documents\github\Mediatoy\Src\Mediatoy\Mediatoy\obj\Release\Media
 C:\Users\micha\Documents\github\Mediatoy\Src\Mediatoy\Mediatoy\obj\Release\Mediatoy.csproj.Up2Date
 C:\Users\micha\Documents\github\Mediatoy\Src\Mediatoy\Mediatoy\obj\Release\Mediatoy.exe
 C:\Users\micha\Documents\github\Mediatoy\Src\Mediatoy\Mediatoy\obj\Release\Mediatoy.pdb
+C:\Users\micha\Documents\github\Mediatoy\Src\Mediatoy\Mediatoy\bin\Release\Valuechanges.dll
+C:\Users\micha\Documents\github\Mediatoy\Src\Mediatoy\Mediatoy\bin\Release\Valuechanges.pdb
