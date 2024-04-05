@@ -457,7 +457,7 @@ namespace Mediatoy
                 picturebox.Location = new Point((cx - picturebox.Size.Width * 8) * (lx + 1) / 9 + picturebox.Size.Width * lx, (cy - picturebox.Size.Height * 5) * (ly + 1) / 6 + picturebox.Size.Height * ly);
                 Rectangle r = new Rectangle(0, 0, picturebox.Width, picturebox.Height);
                 System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath();
-                int d = 22;
+                int d = 50;
                 gp.AddArc(r.X, r.Y, d, d, 180, 90);
                 gp.AddArc(r.X + r.Width - d, r.Y, d, d, 270, 90);
                 gp.AddArc(r.X + r.Width - d, r.Y + r.Height - d, d, d, 0, 90);
