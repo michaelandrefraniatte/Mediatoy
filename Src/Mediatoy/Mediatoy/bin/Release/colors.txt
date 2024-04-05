@@ -1,0 +1,4 @@
+// background color
+rgb(0, 0, 0)
+// frequency sticks
+rgb(220, 220, 220)
