@@ -94,6 +94,7 @@ namespace Mediatoy
         public CSCore.IWaveSource finalSource;
         public string backgroundcolor = "";
         public string frequencystickscolor = "";
+        private bool youtubecookieson, spotifycookieson;
         public static int[] wd = { 2, 2, 2, 2 };
         public static int[] wu = { 2, 2, 2, 2 };
         public static void valchanged(int n, bool val)
@@ -188,6 +189,8 @@ namespace Mediatoy
                 frequencystickscolor = file.ReadLine();
                 file.Close();
             }
+            youtubecookieson = File.Exists(Application.StartupPath + @"\Mediatoy.exe.WebView2\EBWebView\Default\IndexedDB\https_www.youtube.com_0.indexeddb.leveldb/LOG.old");
+            spotifycookieson = File.Exists(Application.StartupPath + @"\Mediatoy.exe.WebView2\EBWebView\Default\IndexedDB\https_open.spotify.com_0.indexeddb.leveldb/LOG.old");
             Task.Run(() => GetAudioByteArray());
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -376,7 +379,7 @@ namespace Mediatoy
         }
         private async void timer1_Tick(object sender, EventArgs e)
         {
-            if (webView21.Source.ToString().Contains("youtube.com") | webView21.Source.ToString().Contains("youtu.be"))
+            if ((webView21.Source.ToString().Contains("youtube.com") | webView21.Source.ToString().Contains("youtu.be")) & youtubecookieson)
             {
                 try
                 {
@@ -887,7 +890,7 @@ namespace Mediatoy
         {
             try
             {
-                if (webView21.Source.ToString().Contains("spotify"))
+                if (webView21.Source.ToString().Contains("spotify") & spotifycookieson)
                 {
                     ComputeData();
                     string stringinject = @"
