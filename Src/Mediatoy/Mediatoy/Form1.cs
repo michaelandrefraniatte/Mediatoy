@@ -148,6 +148,10 @@ namespace Mediatoy
             FillBox();
             SetStyle(); 
             AddStyle();
+            if (!Directory.Exists("assets"))
+                Directory.CreateDirectory("assets");
+            if (!File.Exists(@"assets/historic.html"))
+                File.Create(@"assets/historic.html");
             CoreWebView2EnvironmentOptions options = new CoreWebView2EnvironmentOptions("--disable-gpu --disable-gpu-compositing", "en");
             CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, null, options);
             await webView21.EnsureCoreWebView2Async(environment);
@@ -623,6 +627,7 @@ namespace Mediatoy
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            capture.Stop();
             webView21.Dispose();
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
