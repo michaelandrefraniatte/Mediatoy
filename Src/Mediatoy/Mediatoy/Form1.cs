@@ -930,10 +930,11 @@ namespace Mediatoy
                                 barHeight = audiorawdata[i] / 2;
                                 ctx.fillStyle = 'frequencystickscolor';
                                 ctx.strokeStyle = 'frequencystickscolor';
-                                ctx.fillRect(x, HEIGHT / 2 - barHeight / 2, barWidth, barHeight / 2 + 1);
-                                ctx.fillRect(x, HEIGHT / 2 + barHeight / 2, barWidth, -barHeight / 2 - 1);
+                                ctx.fillRect(x + 1, HEIGHT / 2 - barHeight / 2, barWidth - 1, barHeight / 2);
+                                ctx.fillRect(x + 1, HEIGHT / 2 + barHeight / 2, barWidth - 1, -barHeight / 2);
                                 x += barWidth;
                             }
+                            ctx.fillRect(0, HEIGHT / 2, WIDTH, 1);
                             ctx.stroke();
                         }
                         catch {}
