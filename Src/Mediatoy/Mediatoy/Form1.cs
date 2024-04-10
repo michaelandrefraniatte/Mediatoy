@@ -73,6 +73,7 @@ namespace Mediatoy
         public static bool cutsound = false;
         private static IntPtr hwnd;
         public static Valuechange ValueChange = new Valuechange();
+        private static int width, height;
         private static bool f11switch = false;
         public int numBars = 100;
         public float[] barDataLeft = new float[100];
@@ -218,6 +219,46 @@ namespace Mediatoy
             {
                 AddStyle();
             }
+            if (keyData == Keys.F11)
+            {
+                if (!f11switch)
+                {
+                    width = Screen.PrimaryScreen.Bounds.Width;
+                    height = Screen.PrimaryScreen.Bounds.Height;
+                    WINDOW_NAME = GetActiveWindowTitle();
+                    if (WINDOW_NAME == "Mediatoy")
+                    {
+                        IntPtr window = FindWindowByCaption(IntPtr.Zero, WINDOW_NAME);
+                        SetWindowLong(window, GWL_STYLE, WS_SYSMENU);
+                        SetWindowPos(window, -2, 0, 0, width, height, 0x0040);
+                        DrawMenuBar(window);
+                        f11switch = true;
+                    }
+                }
+                else
+                {
+                    WINDOW_NAME = GetActiveWindowTitle();
+                    if (WINDOW_NAME == "Mediatoy")
+                    {
+                        IntPtr window = FindWindowByCaption(IntPtr.Zero, WINDOW_NAME);
+                        SetWindowLong(window, GWL_STYLE, WS_CAPTION | WS_POPUP | WS_BORDER | WS_SYSMENU | WS_TABSTOP | WS_VISIBLE | WS_OVERLAPPED | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+                        SetWindowPos(window, -2, x, y, cx, cy, 0x0040);
+                        DrawMenuBar(window);
+                        f11switch = false;
+                    }
+                }
+            }
+        }
+        private static string GetActiveWindowTitle()
+        {
+            const int nChars = 256;
+            StringBuilder Buff = new StringBuilder(nChars);
+            IntPtr handle = GetForegroundWindow();
+            if (GetWindowText(handle, Buff, nChars) > 0)
+            {
+                return Buff.ToString();
+            }
+            return null;
         }
         private void Form1_SizeChanged(object sender, EventArgs e)
         {

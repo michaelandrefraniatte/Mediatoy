@@ -48,6 +48,8 @@ https://www.google.com/maps
 googlemap.png
 https://www.6play.fr/
 6play.jpg
+https://www.xbox.com/fr-FR/play
+xbox.jpg
 
 
 
